@@ -3,11 +3,35 @@ name = "simulation"
 version = "0.1.0"
 edition = "2024"
 
+[profile.release]
+strip = true
+
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = ["--all-features"]
+
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
 [dependencies]
 winit = { version = "0.30.8", features = ["android-native-activity"] }
 wgpu = "27.0.1"
 env_logger = "0.11.8"
 pollster = "0.4.0"
+anyhow = "1.0.100"
+log = "0.4.28"
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+console_error_panic_hook = "0.1.6"
+console_log = "1.0"
+wgpu = { version = "27.0.0", features = ["webgl"]}
+wasm-bindgen = "0.2"
+wasm-bindgen-futures = "0.4.30"
+web-sys = { version = "0.3", features = [
+    "Document",
+    "Window",
+    "Element",
+]}
 
 
 
