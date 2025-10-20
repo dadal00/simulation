@@ -323,18 +323,14 @@ impl State {
             label: Some("diffuse_bind_group"),
         });
 
-        let camera = Camera {
-            // position the camera 1 unit up and 2 units back
-            // +z is out of the screen
+        let mut camera = Camera {
             eye: (0.0, 1.0, 2.0).into(),
-            // have it look at the origin
             target: (0.0, 0.0, 0.0).into(),
-            // which way is "up"
             up: cgmath::Vector3::unit_y(),
-            aspect: config.width as f32 / config.height as f32,
-            fovy: 45.0,
-            znear: 0.1,
-            zfar: 100.0,
+            aspect: 1.0, // default aspect ratio, this is ` config.width as f32 / config.height as f32 ` in the tutorial
+            fovy: 45.0,  // default field of view
+            znear: 0.1,  // > 0
+            zfar: 100.0, // > znear
         };
 
         let mut camera_uniform = CameraUniform::new();
@@ -490,6 +486,7 @@ impl State {
 
     fn update(&mut self) {
         self.camera_controller.update_camera(&mut self.camera);
+        self.camera.aspect = self.config.width as f32 / self.config.height as f32;
         self.camera_uniform.update_view_proj(&self.camera);
         self.queue.write_buffer(
             &self.camera_buffer,
